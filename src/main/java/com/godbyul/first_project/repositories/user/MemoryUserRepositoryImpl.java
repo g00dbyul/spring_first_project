@@ -39,4 +39,8 @@ public class MemoryUserRepositoryImpl implements UserRepository {
         }
         store.remove(id);
     }
+
+    public void clear() {
+        store.clear();
+    }
 }
