@@ -1,6 +1,7 @@
 package com.godbyul.first_project.repositories.user;
 
 import com.godbyul.first_project.domains.User;
+import com.godbyul.first_project.exceptions.UserException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,9 +16,6 @@ public class MemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        if (store.containsKey(user.getUuid())) {
-            throw new IllegalStateException("이미 존재하는 유저입니다.");
-        }
         store.put(user.getUuid(), user);
         return user;
     }
@@ -35,7 +33,7 @@ public class MemoryUserRepositoryImpl implements UserRepository {
     @Override
     public void delete(String id) {
         if (!store.containsKey(id)) {
-            throw new IllegalStateException("존재하지 않는 유저입니다.");
+            throw new UserException(UserException.USER_NOT_FOUND_MESSAGE);
         }
         store.remove(id);
     }
