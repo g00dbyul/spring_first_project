@@ -2,6 +2,7 @@ package com.godbyul.first_project.authentication.controller;
 
 import com.godbyul.first_project.authentication.domains.User;
 import com.godbyul.first_project.authentication.dto.CreateUserDto;
+import com.godbyul.first_project.authentication.dto.UserResponseDto;
 import com.godbyul.first_project.common.dto.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AuthController {
     @Operation(summary = "사용자 조회", description = "아이디로 사용자를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "성공")
-    ResponseEntity<ResponseDto<User>> findUserById(@Parameter(description = "User ID", required = true) @PathVariable("id") String id);
+    ResponseEntity<ResponseDto<UserResponseDto>> findUserById(@Parameter(description = "User ID", required = true) @PathVariable("id") String id);
 
     @Operation(summary = "회원 가입", description = "회원 가입을 진행합니다.")
     @ApiResponse(responseCode = "201", description = "성공")
-    ResponseEntity<ResponseDto<User>> createUser(@RequestBody CreateUserDto userDto);
+    ResponseEntity<ResponseDto<UserResponseDto>> createUser(@RequestBody CreateUserDto userDto);
 }

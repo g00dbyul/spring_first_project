@@ -2,10 +2,12 @@ package com.godbyul.first_project.authentication.controller;
 
 import com.godbyul.first_project.authentication.domains.User;
 import com.godbyul.first_project.authentication.dto.CreateUserDto;
+import com.godbyul.first_project.authentication.dto.UserResponseDto;
 import com.godbyul.first_project.authentication.service.AuthService;
 import com.godbyul.first_project.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,7 @@ public class AuthControllerImpl implements AuthController {
     @GetMapping("/{id}")
     @ResponseBody
     @Override
-    public ResponseEntity<ResponseDto<User>> findUserById(@PathVariable("id") String id) {
+    public ResponseEntity<ResponseDto<UserResponseDto>> findUserById(@PathVariable("id") String id) {
         System.out.println("id : " + id);
         return ResponseEntity.ok().build();
     }
@@ -31,14 +33,15 @@ public class AuthControllerImpl implements AuthController {
     @PostMapping("/user")
     @ResponseBody
     @Override
-    public ResponseEntity<ResponseDto<User>> createUser(CreateUserDto userDto) {
-        /**
-         * Response Body에 대해 고려할 필요가 있음
-         * - User 객체에는 password가 포함되어 있음
-         * - service에서 발생하는 exception에 대한 처리
-         */
-        authService.createUser(userDto);
-        return null;
+    public ResponseEntity<ResponseDto<UserResponseDto>> createUser(CreateUserDto userDto) {
+        User user = authService.createUser(userDto);
+        return ResponseEntity.ok(
+                new ResponseDto<>(
+                        HttpStatus.CREATED.value(),
+                        "회원가입 성공",
+                        new UserResponseDto(user)
+                )
+        );
     }
 }
 
