@@ -6,7 +6,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -18,6 +20,7 @@ public class SecurityConfig {
                 authorize.requestMatchers("/api/v1/sign/**")
                         .permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "api/v1/auth/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oAuth -> oAuth
@@ -29,7 +32,13 @@ public class SecurityConfig {
                 )
 //                .formLogin(login -> login.loginPage("/api/v1/sign/in"))
                 .logout(LogoutConfigurer::permitAll)
-                .csrf(Customizer.withDefaults());
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults());
         return http.build();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
